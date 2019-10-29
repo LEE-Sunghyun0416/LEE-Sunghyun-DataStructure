@@ -1,0 +1,182 @@
+#pragma warning (disable : 4996)
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+/*
+분수의 분모와 분자를 입력 받을 변수를 Fraction이라는 구조체로 설정해준다.
+*/
+struct Fraction {
+	long numerator; // 분자
+	long denominator; // 분모
+	long scm;
+};
+
+/*
+약분을 실행하는 함수이지만 기능은 분모에만 음수 기호가 있을 때 그것을 
+분자로 옮겨주거나 둘다 음수일 경우 그것들을 양수로 바꾸어 주는 기능을 한다.
+*/
+struct Fraction reduce_fraction(struct Fraction f1)
+{
+	if (f1.numerator < 0 && f1.denominator < 0)
+	{
+		f1.numerator = abs(f1.numerator);
+		f1.denominator = abs(f1.denominator);
+	}
+	else if (f1.numerator > 0 && f1.denominator < 0) {
+		f1.numerator = (-f1.numerator);
+		f1.denominator = abs(f1.denominator);
+	}
+
+	return f1;
+}
+
+/*
+최대 공약수 최대공약수를 저장할 변수
+for문을 돌릴 변수i와 가로 세로 중에서 더 작은 수를 저장할	변수j
+분모와 분자중 더 작은 수를 j에 저장하고 i를 j까지 돌 동안 분자와 분모
+모두 나누어지는 숫자를 scm에 저장한다.
+최대공약수를 리턴한다.
+*/
+long gcd(struct Fraction f1){
+	long scm;
+	int i, j;
+		
+	if (f1.denominator < f1.numerator)
+		j = abs(f1.denominator);
+	j = abs(f1.numerator);
+		
+	for (i = 1; i <= j; i++)	
+	{
+		if (abs(f1.denominator) % i == 0 && abs(f1.numerator % i == 0))			
+			scm= i;
+	}
+		
+		return scm;    
+
+}
+
+
+/*
+분수끼리 덧셈을 실시하는 함수이다.
+result라는 Fraction형 변수를 설정해주고 result변수의 분자와 분모에
+각각 들어온 f1과 f2의 최대공약수로 나누어 밑의 식처럼 분수 덧셈 계산한 값을 넣고
+result의 분자와 분모의 최대공약수를 구해 나누어 약분한후 리턴한다.
+*/
+struct Fraction add(struct Fraction f1, struct Fraction f2)
+{
+	struct Fraction result;
+	long f1_gcd = gcd(f1);
+	long f2_gcd = gcd(f2);
+
+	result.denominator = (f1.denominator/(f1_gcd)) * (f2.denominator/(f2_gcd));
+	result.numerator = ((f1.numerator/(f1_gcd)) * (f2.denominator/(f2_gcd))) + ((f2.numerator/(f2_gcd)) * (f1.denominator/(f1_gcd)));
+	
+	long result_gcd = gcd(result);
+	result.denominator = (result.denominator / result_gcd);
+	result.numerator = (result.numerator / result_gcd);
+
+	result = reduce_fraction(result);
+
+	return result;
+}
+
+/*
+분수끼리 나눗셈을 실시하는 함수이다.
+result라는 Fraction형 변수를 설정해주고 result변수의 분자와 분모에
+각각 들어온 f1과 f2의 최대공약수로 나누어 밑의 식처럼 분수 나눗셈 계산한 값을 넣고
+result의 분자와 분모의 최대공약수를 구해 나누어 약분한후 리턴한다.
+*/
+struct Fraction minus(struct Fraction f1, struct Fraction f2)
+{
+	struct Fraction result;
+	long f1_gcd = gcd(f1);
+	long f2_gcd = gcd(f2);
+
+	result.denominator = (f1.denominator/(f1_gcd)) * (f2.denominator/(f2_gcd));
+	result.numerator = ((f1.numerator/(f1_gcd)) * (f2.denominator/(f2_gcd))) - ((f2.numerator/(f2_gcd)) * (f1.denominator/(f1_gcd)));
+
+	long result_gcd = gcd(result);
+	result.denominator = (result.denominator / result_gcd);
+	result.numerator = (result.numerator / result_gcd);
+
+	result = reduce_fraction(result);
+
+	return result;
+}
+
+
+/*
+분수끼리 곱셈을 실시하는 함수이다.
+result라는 Fraction형 변수를 설정해주고 result변수의 분자와 분모에
+각각 들어온 f1과 f2의 최대공약수로 나누어 밑의 식처럼 분수 곱셈 계산한 값을 넣고
+result의 분자와 분모의 최대공약수를 구해 나누어 약분한후 리턴한다.
+*/struct Fraction multiple(struct Fraction f1, struct Fraction f2)
+{
+	struct Fraction result;
+	long f1_gcd = gcd(f1);
+	long f2_gcd = gcd(f2);
+
+	result.denominator = (f1.denominator/(f1_gcd)) * (f2.denominator/(f2_gcd));
+	result.numerator = (f1.numerator/(f1_gcd)) *  (f2.numerator/(f2_gcd));
+
+	long result_gcd = gcd(result);
+	result.denominator = (result.denominator / result_gcd);
+	result.numerator = (result.numerator / result_gcd);
+
+	result = reduce_fraction(result);
+
+	return result;
+}
+
+/*
+분수끼리 뺄셈을 실시하는 함수이다.
+result라는 Fraction형 변수를 설정해주고 result변수의 분자와 분모에
+각각 들어온 f1과 f2의 최대공약수로 나누어 밑의 식처럼 분수 뺄셈 계산한 값을 넣고
+result의 분자와 분모의 최대공약수를 구해 나누어 약분한후 리턴한다.
+*/
+struct Fraction divide(struct Fraction f1, struct Fraction f2)
+{
+	struct Fraction result;
+	long f1_gcd = gcd(f1);
+	long f2_gcd = gcd(f2);
+
+	result.denominator = (f1.denominator/(f1_gcd)) * (f2.numerator/(f2_gcd));
+	result.numerator = (f1.numerator/(f1_gcd)) *  (f2.denominator/(f2_gcd));
+
+	long result_gcd = gcd(result);
+	result.denominator = (result.denominator / result_gcd);
+	result.numerator = (result.numerator / result_gcd);
+
+	result = reduce_fraction(result);
+
+	return result;
+}
+
+
+
+int main() {
+
+	struct Fraction f1, f2, result;
+	
+	//fraction형 변수 f1과 f2의 각각의 분자 분모 값을 입력 받는다.
+	scanf("%ld %ld %ld %ld", &f1.numerator, &f1.denominator, &f2.numerator, &f2.denominator);
+	
+	//분수에 0값이 있으면 0으로 나누어 진다는 문구를 출력한다.
+	if (f1.numerator == 0 || f2.numerator ||f1.denominator == 0 || f2.denominator == 0) {
+		printf("devide by zero");
+		return 0;
+	}
+	
+	result = add(f1, f2);
+	printf("%ld/%ld\n",result);
+	result = minus(f1, f2);
+	printf("%ld/%ld\n", result);
+	result = multiple(f1, f2);
+	printf("%ld/%ld\n", result);
+	result = divide(f1, f2);
+	printf("%ld/%ld\n", result);
+
+
+	return 0;
+}
