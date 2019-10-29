@@ -1,0 +1,52 @@
+#pragma warning(disable:4996) //scanf로 인한 오류를 방지하기 위해 설정하는 것.
+#include <stdio.h>
+#include <stdlib.h>
+#define NUM 90000	//NUM이라는 숫자를 100으로 지정한다.
+
+int main() {
+
+	int num;	//숫자를 입력받는 변수
+	int cnt = 0;//소수의 개수를 카운팅해주는 변수
+	scanf("%d", &num);
+	int prime[NUM]; //크기가 100개인 배열을 만든다.
+
+	int i, j;
+	for (i = 1; i <= num; i++) {		//변수 i가 0부터 입력 받은 정수 num까지 돌고
+		for (j = 2; j < i; j++) {		//변수 j가 i까지 돌면서 0인경우는 i를 +한다
+			if (i % j == 0) {
+				break;
+			}
+		}
+		if (i == j)				//변수j가 i까지 돌면서 나누어 지지않고 i==j가 된다면
+		{						//그것을 소수로 간주하여 차례대로 만들어둔
+			prime[cnt] = i;		//prime[]배열에 넣는다.
+			cnt++;				//소수를 찾을때마다 증가시켜 입력한 수의 총 소수 개수를 저장한다.
+		}
+	}
+
+	int firPr, secPr;			//척번째 소수와 두번째 소수를 담을 변수
+	int result1, result2;		//최종적으로 출력할 두 변수를 담을 변수
+
+	for (i = 0; i < cnt; i++)				//i가 소수의 개수(cnt)만큼 돌동안 
+	{
+		\
+			firPr = prime[i];					//첫번째 소수를 prime[i]로 지정하고
+		secPr = num - firPr;				//두번째 소수를 입력한 num에서 첫번째 소수를 뺀 수라 가정했을 때
+		if (firPr - secPr <= 0)				//가정한 첫번째 소수에서 두번째 소수를 뺀 값이 작다면(첫번째 소수가 커질때까지)
+		{									//(if (firPr - secPr <= 0)는 두 소수의 차가 가장 적은 수를 출력하기 위한 설정)
+			for (j = 0; j < cnt; j++)		//j를 소수의 개수(cnt)만큼 돌리고
+			{
+				if (secPr == prime[j])		//만약 가정한 두번째 소수(secPr)이 실제 저장된 배열에 있다면
+				{
+					result1 = firPr;		//result1에 첫번째 소수(firPr)값을
+					result2 = secPr;		//result2에 두번째 소수(secPr)값을 저장한다.
+				}
+			}
+		}
+	}
+
+
+	printf("%d %d\n", result1, result2);	//저장한 두 소수의 값을 출력한다.
+
+	return 0;
+}
