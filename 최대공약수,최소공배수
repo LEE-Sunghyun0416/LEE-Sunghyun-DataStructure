@@ -1,0 +1,63 @@
+#pragma warning(disable:4996)	//scanf로 인한 오류를 방지하기 위해 설정
+#include <stdio.h>
+#include <stdlib.h>
+
+long long biggest_common_measure(int wid, int col, int height)	//최대 공배수를 구하는 함수
+{
+	int bcm;							//최대공배수를 저장할 변수
+	int i, j;							//for문을 돌릴 변수i와 가로 세로 중에서 더 큰 수를 저장할	변수j
+	if (wid > col)						//가로가 더 크다면 
+		j = wid;						//j에 가로를 저장
+	j = col;							//세로가 더 크다면 j에 세로를 저장
+
+	for (i = j; i <= wid * col * height; i++)		//i를 j라 저장하고 가로세로의 곱까지 돌리는 for문을 만들고
+	{
+		if (i % wid == 0 && i % col == 0 && i % height == 0) { //가로, 세로, 높이가 모두 나누어지는 i를
+			bcm = i;										   //세 수의 최대공배수라 정하고 bcm에 저장한다.
+			break;                                             //공배수 발견시 for문을 종료한다.
+		}
+
+	}
+
+	return bcm;					//최대공배수 값을 리턴해준다.
+
+}
+
+long long smallest_common_multiple(int wid, int col, int height)   //최대 공약수를 구하는 함수
+{
+	int scm;//최대공약수를 저장할 변수
+	int i, j;//for문을 돌릴 변수i와 가로 세로 중에서 더 작은 수를 저장할	변수j
+
+	if (wid < col)//세로가 더 크다면
+		j = wid;//j에 가로를 저장
+	j = col	//가로가 더 크다면 j에 세로를 저장
+
+	for (i = 1; i <= j; i++)	//i는 1이고 j까지 도는 for문이라 할 때
+	{
+		if (wid % i == 0 && col % i == 0 && height % i == 0)//가로, 세로, 높이를 i로 나눈 나머지가 0인
+			scm = i;//i가 최대공약수이다.
+	}
+
+	return scm;//최대공약수를 리턴한다.
+}
+
+int main()
+{
+	int wid;										//가로 값을 입력 받을 변수
+	int col;										//세로 값을 입력 받을 변수
+	int height;										//높이 값을 입력 받을 변수				
+	scanf("%d %d %d", &wid, &col, &height);			//가로, 세로, 높이 값을 입력 받는다.
+
+	int bcm = biggest_common_measure(wid, col, height);		//bcm에 최소 공배수를 저장
+	int scm = smallest_common_multiple(wid, col, height);	//scm에 최대 공약수를 저장
+
+	long long x = (biggest_common_measure(wid, col, height)) / wid;	  //x에 정육면체를 만들기위한 가로 개수를 저장
+	long long y = (biggest_common_measure(wid, col, height)) / col;	  //y에 정육면체를 만들기위한 가로 개수를 저장
+	long long z = (biggest_common_measure(wid, col, height)) / height;  //z에 정육면체를 만들기위한 가로 개수를 저장
+
+	int result = x * y * z;					//세 수를 곱한 것이 정육면체를 만드는데 필요한 블럭의 수이다.
+
+	printf("%lu %lu", bcm, result);			//필요한 총 개수를 출력한다.
+
+	return 0;
+}
